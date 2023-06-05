@@ -62,14 +62,40 @@ chai.should();
         this.lastIndex = index;
       });
       it("should not create a person record without an age", async function () {
-        // your code goes here.  Hint: to clear the age field, you need the line
-        // await page.$eval("#age", (el) => (el.value = "")); 
+        //to clear the age field by setting its value to an empty string
+        await page.$eval("#age", (el) => (el.value = ""));
+        await this.addPerson.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        resultData.should.include("Age is required");
       });
+
       it("should return the entries just created", async function () {
-         // your code goes here
+        await this.listPeople.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        const people = JSON.parse(resultData);
+        people.should.be.an("array");
+        people.should.have.lengthOf.at.least(1);
+        const lastEntry = people[people.length - 1];
+        lastEntry.should.have.property("name", "Fred");
+        lastEntry.should.have.property("age", 10);
       });
+
       it("should return the last entry.", async function () {
-         // your code goes here
+        await this.personIndex.type(this.lastIndex.toString());
+        await this.getPerson.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        const person = JSON.parse(resultData);
+        person.should.have.property("name", "Fred");
+        person.should.have.property("age", 10);
       });
     });
   });
