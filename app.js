@@ -5,7 +5,6 @@ app.use(express.json());
 
 const people = [];
 
-
 app.all("/api/v1/*", (req, res) => {
   res.json({ error: "That route is not implemented." });
 });
@@ -13,3 +12,5 @@ app.all("/api/v1/*", (req, res) => {
 const server = app.listen(3000, () => {
   console.log("listening on port 3000...");
 });
+
+module.exports = { app, server };
